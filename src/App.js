@@ -5,7 +5,6 @@ import Imessage from './components/Imessage/Imessage'
 function App() {
   return (
     <div className="app">
-      <h1>Lets build iMessage clone ASAP</h1>
       <Imessage />
     </div>
   );
