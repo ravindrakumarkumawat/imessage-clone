@@ -35,3 +35,7 @@
   /* outline-width: 0; */
   outline: none;
 }
+
+.sidebar__chats {
+  overflow: scroll;
+}
