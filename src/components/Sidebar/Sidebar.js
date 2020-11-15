@@ -1,15 +1,24 @@
 import { Avatar, IconButton } from '@material-ui/core'
 import { RateReviewOutlined, Search } from '@material-ui/icons'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import SidebarChat from '../SidebarChat/SidebarChat'
 import './Sidebar.css'
 import { selectUser } from '../../features/userSlice'
-import { auth } from '../../firebase'
+import db, { auth } from '../../firebase'
 
 const Sidebar = () => {
   const user = useSelector(selectUser)
+  const [chats, setChats] = useState([])
 
+  useEffect(() =>{
+    db.collection('chats').onSnapshot((snapshot) => {
+      setChats(snapshot.docs.map(doc =>({
+        id: doc.id,
+        data: doc.data(),
+      })))
+    })
+  }, [])
   return (
     <div className="sidebar">
       <div className='sidebar__header'>
@@ -29,9 +38,7 @@ const Sidebar = () => {
       </div>
 
       <div className='sidebar__chats'>
-        <SidebarChat />
-        <SidebarChat />
-        <SidebarChat />
+        
       </div>
     </div>
   )
