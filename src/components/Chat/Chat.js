@@ -20,7 +20,14 @@ const Chat = () => {
         <strong>Details</strong>
       </div>
       {/* chat messages */}
-      {/* Chat input */}
+      <div className="chat__messages">
+        <h2>I am a message</h2>
+        <h2>I am a message</h2>
+        <h2>I am a message</h2>
+        <h2>I am a message</h2>
+        <h2>I am a message</h2>
+      </div>
+
       <div className="chat__input">
         <form>
           <input 
