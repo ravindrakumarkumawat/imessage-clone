@@ -19,6 +19,16 @@ const Sidebar = () => {
       })))
     })
   }, [])
+
+  const addChat = () => {
+    const chatName = prompt('Please Enter a chat name')
+    if (chatName) {
+      db.collection('chats').add({
+        chatName: chatName,
+      })
+    }
+  }
+
   return (
     <div className="sidebar">
       <div className='sidebar__header'>
@@ -31,7 +41,8 @@ const Sidebar = () => {
           <input placeholder='Search' />
         </div>
         <IconButton variant="outlined" className='sidebar__inputButton'>
-          <RateReviewOutlined />
+          <RateReviewOutlined 
+            onClick={addChat}/>
         </IconButton>
 
         
