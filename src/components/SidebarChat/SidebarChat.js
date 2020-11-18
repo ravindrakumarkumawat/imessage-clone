@@ -1,11 +1,19 @@
 import { Avatar } from '@material-ui/core'
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setChat } from '../../features/chatSlice'
+import db from '../../firebase'
 import './SidebarChat.css'
 
 const SidebarChat = ({id, chatName}) => {
   const dispatch = useDispatch()
+  const [chatInfo, setChatInfo] = useState([])
+
+  useEffect(() => {
+    db.collection('chats').doc(id).collection('messages').orderBy('timestamp', 'desc').onSnapshot(snapshot => (
+      setChatInfo(snapshot.docs.map((doc) => doc.data()))
+    ))
+  }, [id])
   
   return (
     <div
@@ -18,11 +26,13 @@ const SidebarChat = ({id, chatName}) => {
         )
       }}
       className="sidebarChat">
-      <Avatar />
+      <Avatar src={chatInfo[0]?.photo} />
       <div className="sidebarChat__info">
         <h3>{chatName}</h3>
-        <p>Last Message sent...</p>
-        <small>Time Stamp</small>
+        <p>{chatInfo[0]?.message}</p>
+        <small>{
+          new Date(chatInfo[0]?.timestamp?.toDate()).toLocaleString()
+        }</small>
       </div>
     </div>
   )
