@@ -6,7 +6,7 @@ import { selectChatId, selectChatName } from '../../features/chatSlice'
 import { selectUser } from '../../features/userSlice'
 import Message from "../Message/Message"
 import "./Chat.css"
-import { db } from '../../firebase'
+import db from '../../firebase'
 import firebase from 'firebase'
 
 const Chat = () => {
@@ -42,12 +42,12 @@ const Chat = () => {
       .add({
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         message: input,
-        uid: user.id,
+        uid: user.uid,
         photo: user.photo,
         email: user.email,
         displayName: user.displayName
       })
-      
+
     setInput("")
   }
   return (
