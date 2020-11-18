@@ -8,6 +8,7 @@ import Message from "../Message/Message"
 import "./Chat.css"
 import db from '../../firebase'
 import firebase from 'firebase'
+import FlipMove from 'react-flip-move'
 
 const Chat = () => {
   const [input, setInput] = useState("")  
@@ -59,11 +60,13 @@ const Chat = () => {
         <strong>Details</strong>
       </div>
       <div className="chat__messages">
+        <FlipMove>
         {
           messages.map(({ id, data }) => (
             <Message key={id} id={id} contents={data} />
           ))
         }
+        </FlipMove>        
       </div>
 
       <div className="chat__input">
