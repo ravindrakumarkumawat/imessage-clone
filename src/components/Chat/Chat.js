@@ -1,20 +1,41 @@
-import { IconButton } from "@material-ui/core";
-import { MicNone } from "@material-ui/icons";
-import React, { useState } from "react";
-import { useSelector } from 'react-redux';
-import { selectChatName } from '../../features/chatSlice'
-import Message from "../Message/Message";
-import "./Chat.css";
+import { IconButton } from "@material-ui/core"
+import { MicNone } from "@material-ui/icons"
+import React, { useState,useEffect } from "react"
+import { useSelector } from 'react-redux'
+import { selectChatId, selectChatName } from '../../features/chatSlice'
+import Message from "../Message/Message"
+import "./Chat.css"
+import { db } from '../../firebase'
 
 const Chat = () => {
-  const [input, setInput] = useState("");
+  const [input, setInput] = useState("")
   const chatName = useSelector(selectChatName)
+  const chatId = useSelector(selectChatId)
+  const [messages, setMessages] = useState([])
+
+  useEffect(() => {
+    if (chatId) {
+      db.collection("chats")
+        .doc(chatId)
+        .collection("messages")
+        .orderBy('timestamp', 'desc')
+        .onSnapshot((snapshot) => (
+          setMessages(
+            snapshot.docs.map(doc =>({
+              id: doc.id,
+              data: doc.data()
+            }))
+          )
+        ))
+    }
+  }, [chatId])
+
   const sendMessage = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     // Firebase Handling...
     setInput("")
-  };
+  }
   return (
     <div className="chat">
       <div className="chat__header">
@@ -24,7 +45,11 @@ const Chat = () => {
         <strong>Details</strong>
       </div>
       <div className="chat__messages">
-        <Message />
+        {
+          messages.map(({ id, data }) => (
+            <Message key={id} id={id} contents={data} />
+          ))
+        }
       </div>
 
       <div className="chat__input">
@@ -41,7 +66,7 @@ const Chat = () => {
         </IconButton>        
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Chat;
+export default Chat
