@@ -3,15 +3,18 @@ import { MicNone } from "@material-ui/icons"
 import React, { useState,useEffect } from "react"
 import { useSelector } from 'react-redux'
 import { selectChatId, selectChatName } from '../../features/chatSlice'
+import { selectUser } from '../../features/userSlice'
 import Message from "../Message/Message"
 import "./Chat.css"
 import { db } from '../../firebase'
+import firebase from 'firebase'
 
 const Chat = () => {
-  const [input, setInput] = useState("")
+  const [input, setInput] = useState("")  
+  const [messages, setMessages] = useState([])
   const chatName = useSelector(selectChatName)
   const chatId = useSelector(selectChatId)
-  const [messages, setMessages] = useState([])
+  const user = useSelector(selectUser)
 
   useEffect(() => {
     if (chatId) {
@@ -33,7 +36,18 @@ const Chat = () => {
   const sendMessage = (e) => {
     e.preventDefault()
 
-    // Firebase Handling...
+    db.collection('chats')
+      .doc(chatId)
+      .collection('messages')
+      .add({
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+        message: input,
+        uid: user.id,
+        photo: user.photo,
+        email: user.email,
+        displayName: user.displayName
+      })
+      
     setInput("")
   }
   return (
